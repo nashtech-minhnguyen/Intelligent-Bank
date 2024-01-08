@@ -24,3 +24,16 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       volumes:
         /var/run/docker.sock:/var/run/docker.sock
+
+  postgres:
+    container_name: postgres_container
+    image: postgres:16.1
+    environment:
+      POSTGRES_USER: minh
+      POSTGRES_PASSWORD: 123456
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+volumes:
+  postgres-data:
