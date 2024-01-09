@@ -5,8 +5,6 @@ import com.softbank.accountmanagment.entity.Account;
 import com.softbank.accountmanagment.mapper.AccountMapper;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-
 @Component
 public class AccountMapperImpl implements AccountMapper {
   @Override
