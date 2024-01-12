@@ -1,6 +1,6 @@
 package com.softbank.accountmanagment.entity;
 
-import com.softbank.accountmanagment.enums.Status;
+import com.softbank.common.enums.Status;
 import lombok.Data;
 
 import javax.persistence.Column;

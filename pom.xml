@@ -33,6 +33,11 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>com.softbank</groupId>
+			<artifactId>common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>

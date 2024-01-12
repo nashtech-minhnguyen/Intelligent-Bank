@@ -23,12 +23,12 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "source_account_id")
+    @JoinColumn(name = "root_account_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Account sourceAccount;
+    private Account rootAccount;
 
-    @Column(name = "target_account_id")
-    private Long targetAccountId;
+    @Column(name = "partner_account_id")
+    private Long partnerAccountId;
 
     @Column(name = "amount")
     private BigDecimal amount;
