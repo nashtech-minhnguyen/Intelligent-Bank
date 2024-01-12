@@ -2,6 +2,7 @@ package com.softbank.accountmanagment.service.impl;
 
 import com.softbank.accountmanagment.dto.AccountDto;
 import com.softbank.accountmanagment.entity.Account;
+import com.softbank.accountmanagment.enums.Status;
 import com.softbank.accountmanagment.mapper.AccountMapper;
 import com.softbank.accountmanagment.repository.AccountRepository;
 import com.softbank.accountmanagment.service.AccountService;
@@ -31,6 +32,7 @@ public class AccountServiceImpl implements AccountService {
   @Transactional
   public void createAccount(AccountDto accountDto) {
    Account account = accountMapper.toEntityAccount(accountDto);
+   account.setStatus(Status.ACTIVE);
    accountRepository.save(account);
   }
 }

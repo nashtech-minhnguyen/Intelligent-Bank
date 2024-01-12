@@ -1,13 +1,17 @@
 package com.softbank.accountmanagment.entity;
 
+import com.softbank.accountmanagment.enums.Status;
 import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.math.BigDecimal;
@@ -26,6 +30,9 @@ public class Account {
   @Column(name= "account_balance")
   private BigDecimal accountBalance;
 
-  @OneToMany(mappedBy = "accounts", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "sourceAccount")
   private List<Transaction> transactions;
+
+  @Enumerated(EnumType.STRING)
+  private Status status;
 }
