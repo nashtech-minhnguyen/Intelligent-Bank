@@ -2,10 +2,10 @@ package com.softbank.accountmanagment.service.impl;
 
 import com.softbank.accountmanagment.dto.AccountDto;
 import com.softbank.accountmanagment.entity.Account;
-import com.softbank.accountmanagment.enums.Status;
 import com.softbank.accountmanagment.mapper.AccountMapper;
 import com.softbank.accountmanagment.repository.AccountRepository;
 import com.softbank.accountmanagment.service.AccountService;
+import com.softbank.common.enums.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
