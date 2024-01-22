@@ -7,18 +7,35 @@ import com.softbank.accountmanagment.repository.AccountRepository;
 import com.softbank.accountmanagment.service.AccountService;
 import com.softbank.common.enums.Status;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Service
 public class AccountServiceImpl implements AccountService {
 
+  private static final int ACCOUNT_CODE_LENGTH = 9;
+
+  private static final int LETTER_ACCOUNT_CODE_LENGTH = 2;
+
+  private static final int NUMBER_OF_DIGITS = 10;
+
+  private static final int NUMBER_OF_LETTERS = 26;
+
+  private static final Random RANDOM = new Random();
+
   private final AccountRepository accountRepository;
 
   private final AccountMapper accountMapper;
+
+  @Autowired
+  private RedisTemplate<String, Object> redisTemplate;
+
 
   @Override
   @Transactional
@@ -31,8 +48,30 @@ public class AccountServiceImpl implements AccountService {
   @Override
   @Transactional
   public void createAccount(AccountDto accountDto) {
-   Account account = accountMapper.toEntityAccount(accountDto);
-   account.setStatus(Status.ACTIVE);
-   accountRepository.save(account);
+    String accountCode;
+    Account account = accountMapper.toEntityAccount(accountDto);
+    account.setStatus(Status.ACTIVE);
+    do {
+      accountCode = createAccountCode();
+    } while (!isExistedAccountCode(accountCode));
+    account.setAccountCode(accountCode);
+    accountRepository.save(account);
+    redisTemplate.opsForValue().set(accountCode, account.getStatus());
+  }
+
+  private boolean isExistedAccountCode(String accountCode) {
+    return Boolean.TRUE.equals(redisTemplate.hasKey(accountCode));
+  }
+
+  private String createAccountCode() {
+    StringBuilder accountCode = new StringBuilder();
+    for (int i = 0; i < ACCOUNT_CODE_LENGTH; i++) {
+      if (i < LETTER_ACCOUNT_CODE_LENGTH) {
+        accountCode.append((char) ('A' + RANDOM.nextInt(NUMBER_OF_LETTERS)));
+      } else {
+        accountCode.append(RANDOM.nextInt(NUMBER_OF_DIGITS));
+      }
+    }
+    return accountCode.toString();
   }
 }
