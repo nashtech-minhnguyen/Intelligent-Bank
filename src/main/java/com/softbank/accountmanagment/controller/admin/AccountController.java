@@ -16,18 +16,18 @@ import java.math.BigDecimal;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/admin/accounts")
 public class AccountController {
 
   private final AccountService accountService;
 
-  @PutMapping(value = "/accounts/{id}/balance")
+  @PutMapping(value = "/{id}/balance")
   public ResponseEntity<Void> addBalance(@PathVariable Long id, @RequestParam BigDecimal amountOfMoney) {
     accountService.addBalance(id, amountOfMoney);
     return ResponseEntity.noContent().build();
   }
 
-  @PostMapping(value = "/accounts")
+  @PostMapping
   public ResponseEntity<Void> addAccount(@RequestBody AccountDto accountDto) {
     accountService.createAccount(accountDto);
     return ResponseEntity.noContent().build();
