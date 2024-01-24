@@ -19,59 +19,59 @@ import java.util.Random;
 @Service
 public class AccountServiceImpl implements AccountService {
 
-  private static final int ACCOUNT_CODE_LENGTH = 9;
+    private static final int ACCOUNT_CODE_LENGTH = 9;
 
-  private static final int LETTER_ACCOUNT_CODE_LENGTH = 2;
+    private static final int LETTER_ACCOUNT_CODE_LENGTH = 2;
 
-  private static final int NUMBER_OF_DIGITS = 10;
+    private static final int NUMBER_OF_DIGITS = 10;
 
-  private static final int NUMBER_OF_LETTERS = 26;
+    private static final int NUMBER_OF_LETTERS = 26;
 
-  private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
 
-  private final AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
-  private final AccountMapper accountMapper;
+    private final AccountMapper accountMapper;
 
-  @Autowired
-  private RedisTemplate<String, Object> redisTemplate;
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
 
 
-  @Override
-  @Transactional
-  public void addBalance(Long accountId, BigDecimal amountOfMoney) {
-    Account account = accountRepository.getReferenceById(accountId);
-    account.setAccountBalance(account.getAccountBalance().add(amountOfMoney));
-    accountRepository.save(account);
-  }
-
-  @Override
-  @Transactional
-  public void createAccount(AccountDto accountDto) {
-    String accountCode;
-    Account account = accountMapper.toEntityAccount(accountDto);
-    account.setStatus(Status.ACTIVE);
-    do {
-      accountCode = createAccountCode();
-    } while (!isExistedAccountCode(accountCode));
-    account.setAccountCode(accountCode);
-    accountRepository.save(account);
-    redisTemplate.opsForValue().set(accountCode, account.getStatus());
-  }
-
-  private boolean isExistedAccountCode(String accountCode) {
-    return Boolean.TRUE.equals(redisTemplate.hasKey(accountCode));
-  }
-
-  private String createAccountCode() {
-    StringBuilder accountCode = new StringBuilder();
-    for (int i = 0; i < ACCOUNT_CODE_LENGTH; i++) {
-      if (i < LETTER_ACCOUNT_CODE_LENGTH) {
-        accountCode.append((char) ('A' + RANDOM.nextInt(NUMBER_OF_LETTERS)));
-      } else {
-        accountCode.append(RANDOM.nextInt(NUMBER_OF_DIGITS));
-      }
+    @Override
+    @Transactional
+    public void addBalance(Long accountId, BigDecimal amountOfMoney) {
+        Account account = accountRepository.getReferenceById(accountId);
+        account.setAccountBalance(account.getAccountBalance().add(amountOfMoney));
+        accountRepository.save(account);
     }
-    return accountCode.toString();
-  }
+
+    @Override
+    @Transactional
+    public void createAccount(AccountDto accountDto) {
+        Account account = accountMapper.toEntityAccount(accountDto);
+        account.setStatus(Status.ACTIVE);
+        String accountCode = createAccountCode();
+        while (isExistedAccountCode(accountCode)) {
+          accountCode = createAccountCode();
+        }
+        account.setAccountCode(accountCode);
+        accountRepository.save(account);
+        redisTemplate.opsForValue().set(accountCode, account.getStatus());
+    }
+
+    private boolean isExistedAccountCode(String accountCode) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey(accountCode));
+    }
+
+    private String createAccountCode() {
+        StringBuilder accountCode = new StringBuilder();
+        for (int i = 0; i < ACCOUNT_CODE_LENGTH; i++) {
+            if (i < LETTER_ACCOUNT_CODE_LENGTH) {
+                accountCode.append((char) ('A' + RANDOM.nextInt(NUMBER_OF_LETTERS)));
+            } else {
+                accountCode.append(RANDOM.nextInt(NUMBER_OF_DIGITS));
+            }
+        }
+        return accountCode.toString();
+    }
 }

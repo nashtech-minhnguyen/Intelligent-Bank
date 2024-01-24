@@ -12,10 +12,10 @@ import org.springframework.data.redis.core.RedisTemplate;
 public class RedisConfig {
 
   @Value("${redis.host}")
-  private static String REDIS_HOST;
+  private String REDIS_HOST;
 
   @Value("${redis.port}")
-  private static int REDIS_PORT;
+  private int REDIS_PORT;
 
   @Bean
   public LettuceConnectionFactory connectionFactory() {
