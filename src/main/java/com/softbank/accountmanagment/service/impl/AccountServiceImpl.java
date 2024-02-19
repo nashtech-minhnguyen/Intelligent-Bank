@@ -64,8 +64,8 @@ public class AccountServiceImpl implements AccountService {
         }
         account.setAccountCode(accountCode);
         accountRepository.save(account);
-        redisTemplate.opsForValue().set(accountCode, account.getStatus());
         kafkaTemplate.send(KAFKA_TOPIC_CREATE_ACCOUNT, accountCode);
+        redisTemplate.opsForValue().set(accountCode, account.getStatus());
     }
 
     private boolean isExistedAccountCode(String accountCode) {
