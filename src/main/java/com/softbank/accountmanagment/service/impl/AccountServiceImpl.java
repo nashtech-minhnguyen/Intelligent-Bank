@@ -42,7 +42,7 @@ public class AccountServiceImpl implements AccountService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
+    private KafkaTemplate<String, String> kafkaTemplate;
 
 
     @Override
@@ -64,7 +64,7 @@ public class AccountServiceImpl implements AccountService {
         }
         account.setAccountCode(accountCode);
         accountRepository.save(account);
-        kafkaTemplate.send(KAFKA_TOPIC_CREATE_ACCOUNT, accountCode);
+        kafkaTemplate.send("createAccount", accountCode);
         redisTemplate.opsForValue().set(accountCode, account.getStatus());
     }
 
