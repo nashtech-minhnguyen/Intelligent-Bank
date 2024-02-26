@@ -2,6 +2,9 @@ package com.softbank.accountmanagment.entity;
 
 import com.softbank.common.enums.Status;
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,15 +20,17 @@ import java.util.List;
 
 @Entity
 @Table(name = "accounts")
-@Data
-public class Account {
+@RequiredArgsConstructor
+@Getter
+@Setter
+public class Account extends Common {
 
   @Column(name = "id")
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "account_code")
+  @Column(name = "account_code", unique = true)
   private String accountCode;
 
   @Column(name= "account_balance")

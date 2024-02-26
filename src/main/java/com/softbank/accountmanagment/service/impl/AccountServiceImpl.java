@@ -5,16 +5,15 @@ import com.softbank.accountmanagment.entity.Account;
 import com.softbank.accountmanagment.mapper.AccountMapper;
 import com.softbank.accountmanagment.repository.AccountRepository;
 import com.softbank.accountmanagment.service.AccountService;
+import com.softbank.accountmanagment.service.KafkaService;
+import com.softbank.accountmanagment.service.RedisService;
 import com.softbank.common.enums.Status;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @RequiredArgsConstructor
@@ -35,15 +34,12 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountMapper accountMapper;
 
+    private final RedisService redisService;
+
+    private final KafkaService kafkaService;
+
     @Value("kafka.topic.create-account")
     private String KAFKA_TOPIC_CREATE_ACCOUNT;
-
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
-
-    @Autowired
-    private KafkaTemplate<String, String> kafkaTemplate;
-
 
     @Override
     @Transactional
@@ -63,13 +59,23 @@ public class AccountServiceImpl implements AccountService {
           accountCode = createAccountCode();
         }
         account.setAccountCode(accountCode);
+        account.setCreatedWhen(LocalDateTime.now());
+        account.setModifiedWhen(LocalDateTime.now());
         accountRepository.save(account);
-        kafkaTemplate.send("createAccount", accountCode);
-        redisTemplate.opsForValue().set(accountCode, account.getStatus());
+        sendMessageToStockService(KAFKA_TOPIC_CREATE_ACCOUNT, accountCode);
+        saveAccountInRedis(account);
+    }
+
+    private void saveAccountInRedis(Account account){
+        redisService.save(account);
+    }
+
+    private void sendMessageToStockService(String topic, String message) {
+        kafkaService.send(topic, message);
     }
 
     private boolean isExistedAccountCode(String accountCode) {
-        return Boolean.TRUE.equals(redisTemplate.hasKey(accountCode));
+        return redisService.isExistedAccountCode(accountCode);
     }
 
     private String createAccountCode() {

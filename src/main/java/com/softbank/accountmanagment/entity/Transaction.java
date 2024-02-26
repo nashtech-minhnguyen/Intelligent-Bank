@@ -1,6 +1,10 @@
 package com.softbank.accountmanagment.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,9 +18,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Data
+@RequiredArgsConstructor
+@Getter
+@Setter
 @Table(name = "transactions")
-public class Transaction {
+public class Transaction extends Common {
 
     @Id
     @Column(name = "id")
