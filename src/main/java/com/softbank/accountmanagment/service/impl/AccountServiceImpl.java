@@ -38,7 +38,7 @@ public class AccountServiceImpl implements AccountService {
 
     private final KafkaService kafkaService;
 
-    @Value("kafka.topic.create-account")
+    @Value("${kafka.topic.create-account}")
     private String KAFKA_TOPIC_CREATE_ACCOUNT;
 
     @Override
@@ -71,7 +71,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     private void sendMessageToStockService(String topic, String message) {
-        kafkaService.send(topic, message);
+        kafkaService.send(KAFKA_TOPIC_CREATE_ACCOUNT, message);
     }
 
     private boolean isExistedAccountCode(String accountCode) {
