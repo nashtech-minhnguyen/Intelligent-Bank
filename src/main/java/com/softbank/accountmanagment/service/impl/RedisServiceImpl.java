@@ -1,6 +1,6 @@
 package com.softbank.accountmanagment.service.impl;
 
-import com.softbank.accountmanagment.entity.Account;
+import com.softbank.common.entity.Account;
 import com.softbank.accountmanagment.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

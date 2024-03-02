@@ -1,6 +1,6 @@
 package com.softbank.accountmanagment.service;
 
-import com.softbank.accountmanagment.entity.Account;
+import com.softbank.common.entity.Account;
 
 public interface RedisService {
 

@@ -1,7 +1,7 @@
 package com.softbank.accountmanagment.service.impl;
 
 import com.softbank.accountmanagment.dto.AccountDto;
-import com.softbank.accountmanagment.entity.Account;
+import com.softbank.common.entity.Account;
 import com.softbank.accountmanagment.mapper.AccountMapper;
 import com.softbank.accountmanagment.repository.AccountRepository;
 import com.softbank.accountmanagment.service.AccountService;

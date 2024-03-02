@@ -1,8 +1,7 @@
 package com.softbank.accountmanagment.mapper;
 
 import com.softbank.accountmanagment.dto.AccountDto;
-import com.softbank.accountmanagment.entity.Account;
-import org.springframework.stereotype.Component;
+import com.softbank.common.entity.Account;
 
 public interface AccountMapper {
 
